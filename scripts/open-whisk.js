@@ -87,8 +87,7 @@ async function connectToExistingChrome() {
   return { browser, page };
 }
 
-async function runPrompt(page, whiskPrompt, index, total) {
-  console.log(`Processing prompt ${index + 1} of ${total}...`);
+async function openWhiskOnce(page) {
   console.log('Opening Whisk in your existing Chrome session...');
   await page.goto(WHISK_URL, { waitUntil: 'domcontentloaded' });
   await page.waitForLoadState('networkidle');
@@ -96,23 +95,44 @@ async function runPrompt(page, whiskPrompt, index, total) {
   console.log('Clicking Enter tool...');
   await page.locator(LOCATORS.enterToolButton).click();
   await dismissPopupIfPresent(page);
+}
 
+async function getDescriptionBox(page) {
   const descriptionBox = page.getByRole(LOCATORS.descriptionBox.role, {
     name: LOCATORS.descriptionBox.name
   });
   await descriptionBox.waitFor({ state: 'visible', timeout: 30000 });
+  return descriptionBox;
+}
+
+async function getDownloadButton(page) {
+  return page
+    .locator(LOCATORS.downloadIcon)
+    .filter({ hasText: 'download' })
+    .first();
+}
+
+async function waitForFreshDownloadButton(page, downloadButton, isFirstPrompt) {
+  if (isFirstPrompt) {
+    await downloadButton.waitFor({ state: 'visible', timeout: 120000 });
+    return;
+  }
+
+  await downloadButton.waitFor({ state: 'hidden', timeout: 15000 }).catch(() => {});
+  await downloadButton.waitFor({ state: 'visible', timeout: 120000 });
+}
+
+async function runPrompt(page, whiskPrompt, index, total, descriptionBox, downloadButton) {
+  console.log(`Processing prompt ${index + 1} of ${total}...`);
+
   console.log('Entering prompt...');
   await descriptionBox.click();
   await descriptionBox.fill(whiskPrompt);
   console.log('Pressing Enter...');
   await descriptionBox.press('Enter');
 
-  const downloadButton = page
-    .locator(LOCATORS.downloadIcon)
-    .filter({ hasText: 'download' })
-    .first();
   console.log('Waiting for download button...');
-  await downloadButton.waitFor({ state: 'visible', timeout: 120000 });
+  await waitForFreshDownloadButton(page, downloadButton, index === 0);
   console.log('Download button is visible. Waiting 1 second before downloading...');
   await page.waitForTimeout(1000);
   console.log('Downloading image...');
@@ -127,9 +147,12 @@ async function runPrompt(page, whiskPrompt, index, total) {
 async function main() {
   const prompts = readPromptsFromFile();
   const { browser, page } = await connectToExistingChrome();
+  await openWhiskOnce(page);
+  const descriptionBox = await getDescriptionBox(page);
+  const downloadButton = await getDownloadButton(page);
 
   for (const [index, prompt] of prompts.entries()) {
-    await runPrompt(page, prompt, index, prompts.length);
+    await runPrompt(page, prompt, index, prompts.length, descriptionBox, downloadButton);
   }
 
   await browser.close();
