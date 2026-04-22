@@ -1,0 +1,17 @@
+{
+  "name": "google-labs-playwright",
+  "version": "1.0.0",
+  "description": "Minimal Playwright project to open Google Labs Whisk.",
+  "main": "scripts/open-whisk.js",
+  "scripts": {
+    "open-whisk": "node scripts/open-whisk.js",
+    "start-chrome-debug": "powershell -ExecutionPolicy Bypass -File scripts/start-chrome-debug.ps1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "playwright": "^1.54.2"
+  }
+}
