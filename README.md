@@ -11,6 +11,7 @@ Batch-runs prompts through Google Labs Whisk using Playwright connected to your 
 - Waits for the image to generate
 - Downloads each image into `downloads/`
 - Saves files as `1.png`, `2.png`, `3.png`, and so on
+- Can generate scripts from `titles.txt` using a local Ollama model
 
 ## Requirements
 
@@ -27,6 +28,11 @@ From the repo root:
 ```powershell
 npm install
 ```
+
+To generate scripts locally, you also need:
+
+- Ollama installed and running on your machine
+- At least one text model available in Ollama, or enough disk/RAM to pull one on demand
 
 ## Credentials And Access
 
@@ -60,6 +66,64 @@ Example:
 Prompt one
 Prompt two
 Prompt three
+```
+
+## Script Generation Inputs
+
+The script generator uses:
+
+- `titles.txt`: numbered or unnumbered list of titles
+- `title-script.txt`: the prompt template
+
+The template must include this placeholder:
+
+```text
+[INSERT TOPIC HERE]
+```
+
+Each title is inserted into that placeholder before sending the prompt to Ollama.
+
+## Generate Scripts With Ollama
+
+Default command:
+
+```powershell
+npm run generate-scripts
+```
+
+Use a specific model:
+
+```powershell
+node scripts/generate-scripts.js qwen3:14b
+```
+
+Configurable environment variables:
+
+```text
+OLLAMA_MODEL=qwen3:14b
+OLLAMA_BIN=C:\Users\YourUser\AppData\Local\Programs\Ollama\ollama.exe
+TITLES_FILE=titles.txt
+TITLE_SCRIPT_TEMPLATE=title-script.txt
+SCRIPTS_OUTPUT_DIR=generated
+```
+
+What it does:
+
+1. Reads titles from `titles.txt`
+2. Removes numbering like `1.`, `2.`, `3.`
+3. Checks whether the selected Ollama model already exists locally
+4. Pulls the model automatically if it is missing
+5. Generates a script for each title
+6. Saves output in per-title folders
+
+Output structure:
+
+```text
+generated/
+  <Title 1>/
+    script.txt
+  <Title 2>/
+    script.txt
 ```
 
 ## Environment File
@@ -127,7 +191,9 @@ The extension is taken from Whisk's suggested download filename.
 - `downloads/` is ignored by git
 - `.env` is ignored by git
 - `.playwright-mcp/` is ignored by git
+- `generated/` is ignored by git
 - If the Whisk UI changes, the selectors in `scripts/open-whisk.js` may need updating
+- If copied text from Google Docs looks broken, re-save the source text files as UTF-8
 
 ## Troubleshooting
 
@@ -163,9 +229,19 @@ Most likely causes:
 - Whisk UI changed
 - a popup or interstitial appeared that the script does not handle yet
 
+### Ollama model is huge or slow
+
+`qwen3:235b` is a very large Ollama model. Ollama's library lists `qwen3:235b` at about 142 GB, so pulling and running it locally requires substantial disk space and system memory. If your machine struggles, use a smaller model first to validate the pipeline.
+
+### Do I need Hugging Face downloads too?
+
+No, not for this workflow. If you are using Ollama, the normal path is to let Ollama manage the model with `ollama pull <model>`. You do not need a separate Hugging Face download for the same model unless you want to run it outside Ollama.
+
 ## Main Files
 
 - `scripts/open-whisk.js`: main automation
+- `scripts/generate-scripts.js`: title-to-script generator via Ollama
 - `scripts/start-chrome-debug.ps1`: launches Chrome with remote debugging
 - `image-prompt.txt`: prompt input
+- `titles.txt`: title input
 - `.env`: local configuration

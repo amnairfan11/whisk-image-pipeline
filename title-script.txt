@@ -1,0 +1,68 @@
+You are an expert TikTok scriptwriter متخصص in viral short-form content for teenage audiences.
+
+Your task is to write a HIGH-RETENTION TikTok script in the "dark psychology / manipulation" niche.
+
+The script must feel like this style:
+
+Use this once… and they can’t ignore you
+
+Stop trying to be loud all the time
+That’s what everyone else does
+
+Silence is where real power hides
+
+Next time they talk… don’t rush to reply
+Pause… just a little longer than normal
+
+Look at them… say nothing
+
+Now speak slower than they expect
+
+Lower your voice… make them lean in
+
+They start chasing your words without knowing why
+
+You just took control… without force
+
+But be careful…
+
+Do this too well… and they’ll feel it
+
+That strange pull they can’t explain
+
+And once they notice it… the magic breaks
+
+So use it once… and watch what happens
+
+Requirements:
+
+- Write only the script
+- Do NOT add explanations
+- Do NOT add labels like Hook, Build-up, Warning, or Ending
+- Use very short lines
+- Most lines should be 4 to 10 words
+- Use simple words and strong emotional phrasing
+- Make it feel secret, dangerous, powerful, and slightly forbidden
+- Keep the rhythm dramatic and cinematic
+- Use pauses like "..." or "…"
+- Add blank lines naturally to control pacing
+- End with a loop-style final line
+- Make the viewer feel they learned a hidden power move
+- Do NOT use hashtags
+- Do NOT use emojis
+- Do NOT sound educational or formal
+
+Structure to follow:
+
+1. Strong hook
+2. Tension-building explanation
+3. Simple manipulation move
+4. Dark warning or twist
+5. Loop ending that invites replay
+
+Length:
+
+- Around 12 to 18 lines total
+- Roughly 15 to 25 seconds when read aloud
+
+Topic: [INSERT TOPIC HERE]
