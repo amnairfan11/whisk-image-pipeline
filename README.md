@@ -12,6 +12,7 @@ Batch-runs prompts through Google Labs Whisk using Playwright connected to your 
 - Downloads each image into `downloads/`
 - Saves files as `1.png`, `2.png`, `3.png`, and so on
 - Can generate scripts from `titles.txt` using a local Ollama model
+- Can generate image-prompt text files from each saved script
 
 ## Requirements
 
@@ -124,6 +125,51 @@ generated/
     script.txt
   <Title 2>/
     script.txt
+```
+
+## Generate Image Prompts From Scripts
+
+This stage uses:
+
+- `generated/<Title>/script.txt`
+- `script-image.txt`
+
+The template must include:
+
+```text
+[PASTE YOUR SCRIPT HERE]
+```
+
+Run it with:
+
+```powershell
+npm run generate-image-prompts
+```
+
+Use a specific model:
+
+```powershell
+node scripts/generate-image-prompts.js qwen3:14b
+```
+
+Optional environment variables:
+
+```text
+OLLAMA_IMAGE_MODEL=qwen3:14b
+SCRIPT_IMAGE_TEMPLATE=script-image.txt
+SCRIPTS_OUTPUT_DIR=generated
+```
+
+Output structure after this stage:
+
+```text
+generated/
+  <Title 1>/
+    script.txt
+    image-prompt.txt
+  <Title 2>/
+    script.txt
+    image-prompt.txt
 ```
 
 ## Environment File
@@ -241,7 +287,9 @@ No, not for this workflow. If you are using Ollama, the normal path is to let Ol
 
 - `scripts/open-whisk.js`: main automation
 - `scripts/generate-scripts.js`: title-to-script generator via Ollama
+- `scripts/generate-image-prompts.js`: script-to-image-prompt generator via Ollama
 - `scripts/start-chrome-debug.ps1`: launches Chrome with remote debugging
 - `image-prompt.txt`: prompt input
+- `script-image.txt`: image-prompt template
 - `titles.txt`: title input
 - `.env`: local configuration
