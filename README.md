@@ -13,6 +13,7 @@ Batch-runs prompts through Google Labs Whisk using Playwright connected to your 
 - Saves files as `1.png`, `2.png`, `3.png`, and so on
 - Can generate scripts from `titles.txt` using a local Ollama model
 - Can generate image-prompt text files from each saved script
+- Can run the full title -> script -> image-prompt -> Whisk image pipeline with one command
 
 ## Requirements
 
@@ -172,6 +173,84 @@ generated/
     image-prompt.txt
 ```
 
+## Generate And Download Images From Saved Image Prompts
+
+This stage uses:
+
+- `generated/<Title>/image-prompt.txt`
+
+Run it with:
+
+```powershell
+npm.cmd run open-whisk-generated
+```
+
+If Chrome debug is not already running, start it first:
+
+```powershell
+npm.cmd run start-chrome-debug
+```
+
+Output structure after this stage:
+
+```text
+generated/
+  <Title 1>/
+    script.txt
+    image-prompt.txt
+    images/
+      1.png
+      2.png
+      ...
+      10.png
+```
+
+## Run The Full Pipeline
+
+If your `titles.txt` is ready and you want the repo to do everything in one go, run:
+
+```powershell
+npm.cmd run run-pipeline
+```
+
+What this command does:
+
+1. Generates scripts from `titles.txt`
+2. Generates `image-prompt.txt` for each title
+3. Checks whether Chrome remote debugging is already available
+4. Starts Chrome debug automatically if needed
+5. Opens Whisk
+6. Uses each title folder's `image-prompt.txt`
+7. Downloads images into that title folder's `images/` subfolder
+
+The pipeline also logs:
+
+- per-title timings in the generators
+- stage timing for scripts, image prompts, and image downloads
+- full pipeline total time
+
+## Resume Only The Image Download Step
+
+If scripts and image prompts are already generated, and you only want to resume from Whisk image generation/download:
+
+1. Make sure each title folder already has:
+
+```text
+generated/<Title>/image-prompt.txt
+```
+
+2. Run:
+
+```powershell
+npm.cmd run open-whisk-generated
+```
+
+If Chrome debug is not running yet, start it first:
+
+```powershell
+npm.cmd run start-chrome-debug
+```
+
 ## Environment File
 
 The script loads `.env` and currently uses:
@@ -288,6 +367,8 @@ No, not for this workflow. If you are using Ollama, the normal path is to let Ol
 - `scripts/open-whisk.js`: main automation
 - `scripts/generate-scripts.js`: title-to-script generator via Ollama
 - `scripts/generate-image-prompts.js`: script-to-image-prompt generator via Ollama
+- `scripts/open-whisk-generated.js`: generates and downloads images from per-title image prompts
+- `scripts/run-pipeline.js`: full one-command pipeline
 - `scripts/start-chrome-debug.ps1`: launches Chrome with remote debugging
 - `image-prompt.txt`: prompt input
 - `script-image.txt`: image-prompt template
