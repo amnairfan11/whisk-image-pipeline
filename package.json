@@ -5,9 +5,11 @@
   "main": "scripts/open-whisk.js",
   "scripts": {
     "open-whisk": "node scripts/open-whisk.js",
+    "open-whisk-generated": "node scripts/open-whisk-generated.js",
     "start-chrome-debug": "powershell -ExecutionPolicy Bypass -File scripts/start-chrome-debug.ps1",
     "generate-scripts": "node scripts/generate-scripts.js",
-    "generate-image-prompts": "node scripts/generate-image-prompts.js"
+    "generate-image-prompts": "node scripts/generate-image-prompts.js",
+    "run-pipeline": "node scripts/run-pipeline.js"
   },
   "keywords": [],
   "author": "",

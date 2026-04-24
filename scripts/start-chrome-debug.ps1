@@ -11,8 +11,7 @@ if (!$chromePath) {
   exit 1
 }
 
-Write-Host 'Close all existing Chrome windows first, then press Enter to continue.'
-[void][System.Console]::ReadLine()
+Write-Host 'Starting Chrome with remote debugging...'
 
 Start-Process -FilePath $chromePath -ArgumentList @(
   '--remote-debugging-port=9222',
